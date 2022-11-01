@@ -1,13 +1,13 @@
 import { Camera, CameraType, FlashMode } from 'expo-camera';
 import { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
-import {Entypo, FontAwesome5, MaterialIcons, FontAwesome} from '@expo/vector-icons';
+import {Entypo, FontAwesome5, MaterialIcons, FontAwesome, MaterialCommunityIcons} from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
 export default function App() {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
-  const [flash, setFlash] = useState(Camera.Constants.FlashMode.on);
+  const [flash, setFlash] = useState(Camera.Constants.FlashMode.off);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
 
@@ -34,7 +34,10 @@ export default function App() {
     if (flash== Camera.Constants.FlashMode.off){
       setFlash(Camera.Constants.FlashMode.on)
     }
-    else{
+    else if (flash== Camera.Constants.FlashMode.on){
+      setFlash(Camera.Constants.FlashMode.auto)
+    }
+    else if (flash== Camera.Constants.FlashMode.auto){
       setFlash(Camera.Constants.FlashMode.off)
     }
   }
@@ -62,10 +65,14 @@ export default function App() {
         </Camera>
       </View>
       <View style={styles.bottom_container}>
-        <FontAwesome5 name='images' size={24} color='white' onPress={openImagePickerAsync}></FontAwesome5>
+        <MaterialCommunityIcons name='image' size={32} color='white' onPress={openImagePickerAsync}></MaterialCommunityIcons>
         <FontAwesome name='circle-thin' size={80} color='white' onPress={()=> takePicture()}></FontAwesome>
-        {flash == Camera.Constants.FlashMode.on ? <MaterialIcons name='flash-on' size={32} color='white' onPress={() => toggleFlash()}></MaterialIcons>
-        : <MaterialIcons name='flash-off' size={24} color='white' onPress={() => toggleFlash()}></MaterialIcons>}
+        {flash == Camera.Constants.FlashMode.on ? 
+
+        <MaterialIcons name='flash-on' size={32} color='white' onPress={() => toggleFlash()}></MaterialIcons>
+        : flash == Camera.Constants.FlashMode.off ?
+        <MaterialIcons name='flash-off' size={32} color='white' onPress={() => toggleFlash()}></MaterialIcons> :
+        <MaterialIcons name='flash-auto' size={32} color='white' onPress={() => toggleFlash()}></MaterialIcons>}
         
         {/* {image && <Image source={{uri: image}} style={{flex: 1, width: 50, height: 50}}/>} */}
       </View>
